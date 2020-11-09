@@ -30,11 +30,11 @@
         {
             this.listViewBackUp = new System.Windows.Forms.ListView();
             this.labelBackUpPath = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxBackUp = new System.Windows.Forms.TextBox();
             this.labelListViewBackUp = new System.Windows.Forms.Label();
             this.listView1 = new System.Windows.Forms.ListView();
             this.labelBackUpVersion = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBoxSource = new System.Windows.Forms.TextBox();
             this.labelSource = new System.Windows.Forms.Label();
             this.buttonAddBackUpObj = new System.Windows.Forms.Button();
             this.buttonDeleteBackUpObj = new System.Windows.Forms.Button();
@@ -44,10 +44,12 @@
             // 
             this.listViewBackUp.HideSelection = false;
             this.listViewBackUp.Location = new System.Drawing.Point(12, 43);
+            this.listViewBackUp.MultiSelect = false;
             this.listViewBackUp.Name = "listViewBackUp";
             this.listViewBackUp.Size = new System.Drawing.Size(192, 219);
             this.listViewBackUp.TabIndex = 0;
             this.listViewBackUp.UseCompatibleStateImageBehavior = false;
+            this.listViewBackUp.ItemActivate += new System.EventHandler(this.listViewBackUp_ItemActivate);
             // 
             // labelBackUpPath
             // 
@@ -58,12 +60,13 @@
             this.labelBackUpPath.TabIndex = 2;
             this.labelBackUpPath.Text = "BackUp:";
             // 
-            // textBox1
+            // textBoxBackUp
             // 
-            this.textBox1.Location = new System.Drawing.Point(67, 332);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(407, 20);
-            this.textBox1.TabIndex = 3;
+            this.textBoxBackUp.Enabled = false;
+            this.textBoxBackUp.Location = new System.Drawing.Point(67, 332);
+            this.textBoxBackUp.Name = "textBoxBackUp";
+            this.textBoxBackUp.Size = new System.Drawing.Size(407, 20);
+            this.textBoxBackUp.TabIndex = 3;
             // 
             // labelListViewBackUp
             // 
@@ -92,12 +95,13 @@
             this.labelBackUpVersion.TabIndex = 6;
             this.labelBackUpVersion.Text = "Version:";
             // 
-            // textBox2
+            // textBoxSource
             // 
-            this.textBox2.Location = new System.Drawing.Point(67, 306);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(407, 20);
-            this.textBox2.TabIndex = 9;
+            this.textBoxSource.Enabled = false;
+            this.textBoxSource.Location = new System.Drawing.Point(67, 306);
+            this.textBoxSource.Name = "textBoxSource";
+            this.textBoxSource.Size = new System.Drawing.Size(407, 20);
+            this.textBoxSource.TabIndex = 9;
             // 
             // labelSource
             // 
@@ -126,6 +130,7 @@
             this.buttonDeleteBackUpObj.TabIndex = 11;
             this.buttonDeleteBackUpObj.Text = "Delete";
             this.buttonDeleteBackUpObj.UseVisualStyleBackColor = true;
+            this.buttonDeleteBackUpObj.Click += new System.EventHandler(this.buttonDeleteBackUpObj_Click);
             // 
             // MainForm
             // 
@@ -134,16 +139,17 @@
             this.ClientSize = new System.Drawing.Size(487, 366);
             this.Controls.Add(this.buttonDeleteBackUpObj);
             this.Controls.Add(this.buttonAddBackUpObj);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBoxSource);
             this.Controls.Add(this.labelSource);
             this.Controls.Add(this.labelBackUpVersion);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.labelListViewBackUp);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBoxBackUp);
             this.Controls.Add(this.labelBackUpPath);
             this.Controls.Add(this.listViewBackUp);
             this.Name = "MainForm";
             this.Text = "BackUp Manager";
+            this.Activated += new System.EventHandler(this.MainForm_Activated);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -153,11 +159,11 @@
 
         private System.Windows.Forms.ListView listViewBackUp;
         private System.Windows.Forms.Label labelBackUpPath;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxBackUp;
         private System.Windows.Forms.Label labelListViewBackUp;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Label labelBackUpVersion;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBoxSource;
         private System.Windows.Forms.Label labelSource;
         private System.Windows.Forms.Button buttonAddBackUpObj;
         private System.Windows.Forms.Button buttonDeleteBackUpObj;

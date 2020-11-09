@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,26 +18,40 @@ namespace BackUpManager
         public MainForm()
         {
             InitializeComponent();
-
-            LoadList();
-
+            backUpObjects = new List<BackUpObject>();
         }
 
-        void LoadList()
+        public void RefreshBackUpList()
         {
-            //TODO загрузить список бэк апов, которые нужно получить десериализацией
-        }
-
-        private void buttonSavePath_Click(object sender, EventArgs e)
-        {
-            //string filename = saveFileDialog.FileName;
-            
+            //Обновление списка бэкапов, запускается при запуске программы и добавлении новых элементов
+            listViewBackUp.Clear();
+            foreach (BackUpObject obj in backUpObjects)
+            {
+                listViewBackUp.Items.Add(obj.name);
+            }
         }
 
         private void buttonAddBackUpObj_Click(object sender, EventArgs e)
         {
             FormSettings formSettings = new FormSettings(this);
             formSettings.Show();
+        }
+
+        private void buttonDeleteBackUpObj_Click(object sender, EventArgs e)
+        {
+            //TODO Удаление бэкапа из списка и удаление папок-бэкапов с диска
+        }
+
+        private void MainForm_Activated(object sender, EventArgs e)
+        {
+            RefreshBackUpList();
+        }
+
+        private void listViewBackUp_ItemActivate(object sender, EventArgs e)
+        {
+            int index = listViewBackUp.SelectedIndices[0];
+            textBoxSource.Text = backUpObjects[index].pathOfSource;
+            textBoxBackUp.Text = backUpObjects[index].pathOfBackUp;
         }
     }
 }

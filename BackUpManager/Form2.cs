@@ -52,11 +52,17 @@ namespace BackUpManager
         {      
             if ( textBoxName.Text == "" || textBoxSource.Text == "" || textBoxBackUp.Text == "" )
             {
-                MessageBox.Show("Incorrect input");
+                MessageBox.Show("Incorrect input", "Error");
+            }
+            else if (textBoxSource.Text == textBoxBackUp.Text)
+            {
+                MessageBox.Show("Incorrect Source or BackUp field", "Error");
             }
             else
             {
-                mainForm.backUpObjects.Add(new BackUpObject(name, folderSource, folderBackUp));
+                //Добавление нового объекта в список бэкап объектов
+                BackUpObject obj = new BackUpObject(name, folderSource, folderBackUp);
+                mainForm.backUpObjects.Add(obj);
                 this.Close();
             }   
         }
