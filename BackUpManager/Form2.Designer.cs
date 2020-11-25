@@ -39,6 +39,12 @@
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.labelName = new System.Windows.Forms.Label();
+            this.checkBoxTaskPlan = new System.Windows.Forms.CheckBox();
+            this.checkBoxStartProgram = new System.Windows.Forms.CheckBox();
+            this.checkBoxPeriod = new System.Windows.Forms.CheckBox();
+            this.textBoxSetTime = new System.Windows.Forms.TextBox();
+            this.labelSetTime = new System.Windows.Forms.Label();
+            this.dateTimePickerSetTime = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // textBoxSource
@@ -115,7 +121,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(372, 124);
+            this.buttonSave.Location = new System.Drawing.Point(372, 184);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(103, 23);
             this.buttonSave.TabIndex = 17;
@@ -142,11 +148,81 @@
             this.labelName.TabIndex = 18;
             this.labelName.Text = "Name:";
             // 
+            // checkBoxTaskPlan
+            // 
+            this.checkBoxTaskPlan.AutoSize = true;
+            this.checkBoxTaskPlan.Location = new System.Drawing.Point(16, 118);
+            this.checkBoxTaskPlan.Name = "checkBoxTaskPlan";
+            this.checkBoxTaskPlan.Size = new System.Drawing.Size(73, 17);
+            this.checkBoxTaskPlan.TabIndex = 20;
+            this.checkBoxTaskPlan.Text = "Task plan";
+            this.checkBoxTaskPlan.UseVisualStyleBackColor = true;
+            this.checkBoxTaskPlan.CheckedChanged += new System.EventHandler(this.checkBoxTaskPlan_CheckedChanged);
+            // 
+            // checkBoxStartProgram
+            // 
+            this.checkBoxStartProgram.AutoSize = true;
+            this.checkBoxStartProgram.Enabled = false;
+            this.checkBoxStartProgram.Location = new System.Drawing.Point(34, 141);
+            this.checkBoxStartProgram.Name = "checkBoxStartProgram";
+            this.checkBoxStartProgram.Size = new System.Drawing.Size(221, 17);
+            this.checkBoxStartProgram.TabIndex = 21;
+            this.checkBoxStartProgram.Text = "Сreate a backup when the program starts";
+            this.checkBoxStartProgram.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxPeriod
+            // 
+            this.checkBoxPeriod.AutoSize = true;
+            this.checkBoxPeriod.Enabled = false;
+            this.checkBoxPeriod.Location = new System.Drawing.Point(34, 164);
+            this.checkBoxPeriod.Name = "checkBoxPeriod";
+            this.checkBoxPeriod.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxPeriod.TabIndex = 22;
+            this.checkBoxPeriod.Text = "Create a backup every";
+            this.checkBoxPeriod.UseVisualStyleBackColor = true;
+            // 
+            // textBoxSetTime
+            // 
+            this.textBoxSetTime.Enabled = false;
+            this.textBoxSetTime.Location = new System.Drawing.Point(167, 161);
+            this.textBoxSetTime.Name = "textBoxSetTime";
+            this.textBoxSetTime.Size = new System.Drawing.Size(23, 20);
+            this.textBoxSetTime.TabIndex = 23;
+            this.textBoxSetTime.Text = "1";
+            this.textBoxSetTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // labelSetTime
+            // 
+            this.labelSetTime.AutoSize = true;
+            this.labelSetTime.Enabled = false;
+            this.labelSetTime.Location = new System.Drawing.Point(196, 165);
+            this.labelSetTime.Name = "labelSetTime";
+            this.labelSetTime.Size = new System.Drawing.Size(47, 13);
+            this.labelSetTime.TabIndex = 24;
+            this.labelSetTime.Text = "day(s) at";
+            // 
+            // dateTimePickerSetTime
+            // 
+            this.dateTimePickerSetTime.Enabled = false;
+            this.dateTimePickerSetTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dateTimePickerSetTime.Location = new System.Drawing.Point(249, 161);
+            this.dateTimePickerSetTime.Name = "dateTimePickerSetTime";
+            this.dateTimePickerSetTime.ShowUpDown = true;
+            this.dateTimePickerSetTime.Size = new System.Drawing.Size(67, 20);
+            this.dateTimePickerSetTime.TabIndex = 25;
+            this.dateTimePickerSetTime.Value = new System.DateTime(2020, 2, 1, 0, 0, 0, 0);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(482, 159);
+            this.ClientSize = new System.Drawing.Size(482, 225);
+            this.Controls.Add(this.dateTimePickerSetTime);
+            this.Controls.Add(this.labelSetTime);
+            this.Controls.Add(this.textBoxSetTime);
+            this.Controls.Add(this.checkBoxPeriod);
+            this.Controls.Add(this.checkBoxStartProgram);
+            this.Controls.Add(this.checkBoxTaskPlan);
             this.Controls.Add(this.textBoxName);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.buttonSave);
@@ -178,5 +254,11 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.Label labelName;
+        private System.Windows.Forms.CheckBox checkBoxTaskPlan;
+        private System.Windows.Forms.CheckBox checkBoxStartProgram;
+        private System.Windows.Forms.CheckBox checkBoxPeriod;
+        private System.Windows.Forms.TextBox textBoxSetTime;
+        private System.Windows.Forms.Label labelSetTime;
+        private System.Windows.Forms.DateTimePicker dateTimePickerSetTime;
     }
 }

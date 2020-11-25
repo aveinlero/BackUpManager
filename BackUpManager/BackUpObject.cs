@@ -9,54 +9,65 @@ namespace BackUpManager
 {
     class BackUpObject
     {
-        public string name { get; private set; }
-        public string pathOfSource { get; private set; }
-        public string pathOfBackUp { get; private set; }
-        private Queue<string> queueOfVersion; //список последних версий
-        //TODO Возможно стоит добавить поле очереди дат версий для представления в списке версий
+        public string Name { get; private set; }
+        public string PathOfSource { get; private set; }
+        public string PathOfBackUp { get; private set; }
+        public List<BackUpData> ListOfVersion { get; private set; } //список последних версий
+        
+        //Следующие два свойства определяют автоматизацию создания бэкапов
+        public bool CopyOnStartupStatus { get; set; }
+        public CopyByPeriod CopyByPeriod { get; set; }
 
-        public BackUpObject(string name, string pathOfSource, string pathOfBackUp )
+        public BackUpObject(string name, string pathOfSource, string pathOfBackUp, bool copyOnStartup, CopyByPeriod copyByPeriod)
         {
-            this.name = name;
-            this.pathOfSource = pathOfSource;
-            this.pathOfBackUp = pathOfBackUp;
-            queueOfVersion = new Queue<string>();
+            this.Name = name;
+            this.PathOfSource = pathOfSource;
+            this.PathOfBackUp = pathOfBackUp;
+            ListOfVersion = new List<BackUpData>();
+
+            this.CopyOnStartupStatus = copyOnStartup;
+            this.CopyByPeriod = copyByPeriod;
+
             AddVersion();
         }
 
-        void AddVersion()
+        public void AddVersion()
         {
             //Этот метод предполагает копирование всех папок и файлов из папки источника в новую папку с именем-датой,
             //а также удаление неактуальных версий с жесткого диска
-            
-            //Создание директории для копирования, имя - текущий момент
-            DateTime date = DateTime.Now;
-            string strDate = date.ToString("yyyyMMddHHmmss");
-            string folderPath = $"{pathOfBackUp}\\{strDate}";
+
+            BackUpData data = new BackUpData(PathOfBackUp);
 
             //Копирование файлов и папок в новую бэкап директорию и удаление старых директорий
             try
             {
-                //TODO Ниже закомментирован процесс копирования файлов, убрать комментарии по готовности программы
-                //CopyDir(pathOfSource, folderPath);
                 
+                ListOfVersion.Add(data);
+                //TODO Вернуть по готовности CopyDir(pathOfSource, folderPath);
+
                 //TODO Здесь указан размер очереди для бэкапов, можно добавить регулируемый счетчик
-                if (queueOfVersion.Count < 5)
+                if (ListOfVersion.Count > 5)
                 {
-                    queueOfVersion.Enqueue(folderPath);
-                }
-                else
-                {
-                    string queueElement = queueOfVersion.Dequeue();
-                    Directory.Delete(queueElement, true);
+                    DeleteVersion(0);
                 }
             }
             catch
             {
-                Directory.Delete(folderPath, true);
+                DeleteVersion(ListOfVersion.Count - 1);
             }
         }
-    
+
+        public void DeleteVersion(int index)
+        {
+            //Метод удаляет выбранную версию из списка версий и все соответсвующие ей папки
+            string pathOfDelete = ListOfVersion[index].Path;
+            ListOfVersion.RemoveAt(index);
+            if (Directory.Exists(pathOfDelete))
+            {
+            //TODO Вернуть по готовности Directory.Delete(pathOfDelete, true);
+            }
+        }
+
         void CopyDir(string FromDir, string ToDir)
         {
             //Код нагло стырен из интернета https://ru.stackoverflow.com/questions/654232/Как-скопировать-папку-целиком-и-все-файлы-и-папки-в-ней
@@ -70,6 +81,8 @@ namespace BackUpManager
             {
                 CopyDir(s, ToDir + "\\" + Path.GetFileName(s));
             }
+
+            //TODO Сделать сериализацию
         }
     }
 }

@@ -45,7 +45,6 @@ namespace BackUpManager
         private void textBoxName_TextChanged(object sender, EventArgs e)
         {
             name = textBoxName.Text;
-            //TODO Сделать проверку на корректное имя
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
@@ -61,10 +60,59 @@ namespace BackUpManager
             else
             {
                 //Добавление нового объекта в список бэкап объектов
-                BackUpObject obj = new BackUpObject(name, folderSource, folderBackUp);
-                mainForm.backUpObjects.Add(obj);
+                try
+                {
+                AddBackUpObject();
                 this.Close();
-            }   
+                }
+                catch (Exception ex)
+                {
+                    
+                    MessageBox.Show(ex.Message, "Error");
+                    textBoxSetTime.Text = "1";
+                }
+
+            }
+        }
+
+        private void checkBoxTaskPlan_CheckedChanged(object sender, EventArgs e)
+        {
+            //При изменении включается и выключается доступность объектов для указания периодичности
+            if (checkBoxTaskPlan.Checked == true)
+            {
+                checkBoxStartProgram.Enabled = true;
+                checkBoxPeriod.Enabled = true;
+                dateTimePickerSetTime.Enabled = true;
+                labelSetTime.Enabled = true;
+                textBoxSetTime.Enabled = true;
+            }
+            if (checkBoxTaskPlan.Checked == false)
+            {
+                checkBoxStartProgram.Enabled = false;
+                checkBoxPeriod.Enabled = false;
+                dateTimePickerSetTime.Enabled = false;
+                labelSetTime.Enabled = false;
+                textBoxSetTime.Enabled = false;
+            }
+        }
+
+        void AddBackUpObject()
+        {
+            //TODO Сделать проверку на совпадение путей источников
+
+            bool copyOnStartupStatus = checkBoxStartProgram.Checked;
+            CopyByPeriod copyByPeriod = new CopyByPeriod();
+            if (checkBoxTaskPlan.Checked == true)
+            {
+                copyByPeriod.Period = Int32.Parse(textBoxSetTime.Text);
+                if (copyByPeriod.Period < 1) { MessageBox.Show("Incorrect period value. Set to 1.", "Error"); copyByPeriod.Period = 1; }
+                copyByPeriod.Status = checkBoxPeriod.Checked;
+                copyByPeriod.Time = dateTimePickerSetTime.Value;
+                   
+                BackUpObject obj = new BackUpObject(name, folderSource, folderBackUp, copyOnStartupStatus, copyByPeriod);
+                mainForm.backUpObjects.Add(obj);
+            }
+
         }
     }
 }
