@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,18 +14,27 @@ namespace BackUpManager
         public string Name { get; set; }
         public string PathOfSource { get; set; }
         public string PathOfBackUp { get; set; }
+        public string BackupFolder { get; set; }
         public List<BackUpData> ListOfVersion { get; private set; }     //Список последних версий
+        private int versionCounter;
+        public int VersionCounter 
+        { 
+            get { return versionCounter; }
+            set { if (value < 1) { versionCounter = 1; } else versionCounter = value; } 
+        }
 
         //Следующие два свойства определяют автоматизацию создания бэкапов
         public bool CopyOnStartupStatus { get; set; }
         public CopyByPeriod CopyByPeriod { get; set; }
 
-        public BackUpObject(string name, string pathOfSource, string pathOfBackUp, bool copyOnStartup, CopyByPeriod copyByPeriod)
+        public BackUpObject(string name, string pathOfSource, string pathOfBackUp, int versionCounter, bool copyOnStartup, CopyByPeriod copyByPeriod)
         {
             this.Name = name;
             this.PathOfSource = pathOfSource;
             this.PathOfBackUp = pathOfBackUp;
-            ListOfVersion = new List<BackUpData>();
+            this.BackupFolder = SetBackupFolder();
+            this.ListOfVersion = new List<BackUpData>();
+            this.versionCounter = versionCounter;
 
             this.CopyOnStartupStatus = copyOnStartup;
             this.CopyByPeriod = copyByPeriod;
@@ -37,17 +47,16 @@ namespace BackUpManager
             //Этот метод предполагает копирование всех папок и файлов из папки источника в новую папку с именем-датой,
             //а также удаление неактуальных версий с жесткого диска
 
-            BackUpData data = new BackUpData(PathOfBackUp);
-
+            BackUpData data = new BackUpData(BackupFolder);
+            if (BackupFolder == null) { BackupFolder = SetBackupFolder(); }
             //Копирование файлов и папок в новую бэкап директорию и удаление старых директорий
             try
             {
 
                 ListOfVersion.Add(data);
-                //TODO Вернуть по готовности CopyDir(pathOfSource, folderPath);
+                this.Compress(data);
 
-                //TODO Здесь указан размер очереди для бэкапов, можно добавить регулируемый счетчик
-                if (ListOfVersion.Count > 5)
+                if (ListOfVersion.Count > versionCounter)
                 {
                     DeleteVersion(0);
                 }
@@ -61,39 +70,33 @@ namespace BackUpManager
 
         public void DeleteVersion(int index)
         {
-            //Метод удаляет выбранную версию из списка версий и все соответсвующие ей папки
+            //Метод удаляет выбранную версию из списка версий
             string pathOfDelete = ListOfVersion[index].Path;
             ListOfVersion.RemoveAt(index);
-            if (Directory.Exists(pathOfDelete))
-            {
-                //TODO Вернуть по готовности Directory.Delete(pathOfDelete, true);
-            }
+            if (File.Exists(pathOfDelete)) { File.Delete(pathOfDelete); }
+
+            if (ListOfVersion.Count > versionCounter) { DeleteVersion(0); }
         }
 
-        void CopyDir(string FromDir, string ToDir)
+        void Compress(BackUpData data)
         {
-            //Код нагло стырен из интернета https://ru.stackoverflow.com/questions/654232/Как-скопировать-папку-целиком-и-все-файлы-и-папки-в-ней
-            Directory.CreateDirectory(ToDir);
-            foreach (string s1 in Directory.GetFiles(FromDir))
-            {
-                string s2 = ToDir + "\\" + Path.GetFileName(s1);
-                File.Copy(s1, s2);
-            }
-            foreach (string s in Directory.GetDirectories(FromDir))
-            {
-                CopyDir(s, ToDir + "\\" + Path.GetFileName(s));
-            }
-
+            if (!Directory.Exists(BackupFolder)) { Directory.CreateDirectory(BackupFolder); }
+            string zipFile = data.Path;
+            ZipFile.CreateFromDirectory(PathOfSource, zipFile);
         }
 
-        void Compress()
+        public void Decompress(int index)
         {
+            if (Directory.Exists(PathOfSource)) { Directory.Delete(PathOfSource, true); }
 
+            string zipFile = ListOfVersion[index].Path;
+            ZipFile.ExtractToDirectory(zipFile, PathOfSource);
         }
 
-        void Decompress()
+        public string SetBackupFolder()
         {
-
+            string folder = $"{PathOfBackUp}\\{Name}";
+            return folder;
         }
     }
 }
