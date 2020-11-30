@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace BackUpManager
 {
-    class BackUpObject
+    [Serializable]
+    public class BackUpObject
     {
-        public string Name { get; private set; }
-        public string PathOfSource { get; private set; }
-        public string PathOfBackUp { get; private set; }
-        public List<BackUpData> ListOfVersion { get; private set; } //список последних версий
-        
+        public string Name { get; set; }
+        public string PathOfSource { get; set; }
+        public string PathOfBackUp { get; set; }
+        public List<BackUpData> ListOfVersion { get; private set; }     //Список последних версий
+
         //Следующие два свойства определяют автоматизацию создания бэкапов
         public bool CopyOnStartupStatus { get; set; }
         public CopyByPeriod CopyByPeriod { get; set; }
@@ -41,7 +42,7 @@ namespace BackUpManager
             //Копирование файлов и папок в новую бэкап директорию и удаление старых директорий
             try
             {
-                
+
                 ListOfVersion.Add(data);
                 //TODO Вернуть по готовности CopyDir(pathOfSource, folderPath);
 
@@ -55,6 +56,7 @@ namespace BackUpManager
             {
                 DeleteVersion(ListOfVersion.Count - 1);
             }
+
         }
 
         public void DeleteVersion(int index)
@@ -64,7 +66,7 @@ namespace BackUpManager
             ListOfVersion.RemoveAt(index);
             if (Directory.Exists(pathOfDelete))
             {
-            //TODO Вернуть по готовности Directory.Delete(pathOfDelete, true);
+                //TODO Вернуть по готовности Directory.Delete(pathOfDelete, true);
             }
         }
 
@@ -82,7 +84,16 @@ namespace BackUpManager
                 CopyDir(s, ToDir + "\\" + Path.GetFileName(s));
             }
 
-            //TODO Сделать сериализацию
+        }
+
+        void Compress()
+        {
+
+        }
+
+        void Decompress()
+        {
+
         }
     }
 }
